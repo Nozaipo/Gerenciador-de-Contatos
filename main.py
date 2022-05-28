@@ -1,10 +1,10 @@
-import sys, os, time
+import sys, os, time, re
 
 limpar = 'clear' if sys.platform == 'linux' else 'cls'
 
 class Contatos:
   def __init__(self):
-    self.contatos = {'Henrique': '99999', 'Jonas': '55555', 'Lincoln': '111111'}
+    self.contatos = {'Henrique': '(00) 00000-0000', 'Jonas': '(11) 11111-1111', 'Lincoln': '(22) 22222-2222'}
 
   def contatosVazios(self):
     return True if not self.contatos else False
@@ -14,10 +14,32 @@ class Contatos:
   
   def cadastroContato(self):
     print(f"{'ADICIONAR CONTANTO':{'-'}^30}\n")
+    regex_numero = r'^\(\d{2}\) \d{5}-\d{4}'
 
+    print("Exemplo\n\nNome: Fulano\nTelefone: (99) 99999-9999\n")
+    
     nome = input("Qual o nome do contato: ")
-    telefone = input("Qual o número do contato: ")
-    self.contatos[nome] = telefone
+    
+    while True:
+      telefone = input("Qual o número do contato: ")
+      if re.match(regex_numero, telefone):
+        self.contatos[nome] = telefone
+        break
+      else:
+        os.system(limpar)
+        print("Formato de número inválido...")
+
+        while True:
+          sub = input("\nDeseja inserir novamente?\n1-Sim\n2-Não\n--> ")
+
+          if sub == '1':
+            break
+          elif sub == '2':
+            print('\nVoltando ao menu...')
+            time.sleep(1)
+            return None
+
+          os.system(limpar)
 
     self.ordenarContatos()
     print("\n\nContato adicionado com sucesso!")
@@ -66,7 +88,7 @@ class Contatos:
     input("\n\nPressione qualquer tecla para voltar ao menu...\n")
 
   def listarContatos(self):
-    print(f"{'LISTAR CONTANTOS':{'-'}^20}\n")
+    print(f"{'LISTAR CONTATOS':{'-'}^20}\n")
 
     if self.contatosVazios():
       print("Ainda não existem contatos na agenda.")
